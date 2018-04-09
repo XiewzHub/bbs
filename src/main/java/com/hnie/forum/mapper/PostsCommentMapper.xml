@@ -1,0 +1,113 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper
+        PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+        "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+
+<mapper namespace="com.hnie.forum.mapper.PostsCommentMapper">
+
+    <resultMap id="BaseResultMap" type="com.hnie.forum.domain.PostsComment">
+        <id column="comment_id" jdbcType="INTEGER" property="commentId"/>
+        <result column="posts_id" jdbcType="INTEGER" property="postsId"/>
+        <result column="comment_user_id" jdbcType="INTEGER" property="commentUserId"/>
+        <result column="comment_text" jdbcType="VARCHAR" property="commentText"/>
+        <result column="comment_date" jdbcType="VARCHAR" property="commentDate"/>
+        <association property="user" javaType="com.hnie.forum.domain.User">
+            <id column="user_id" property="id"/>
+            <result column="user_head" property="head"/>
+            <result column="user_name" property="name"/>
+            <result column="user_mail" property="mail"/>
+            <result column="user_birthday" property="birthday"/>
+            <result column="user_sex" property="sex"/>
+            <result column="user_phonenum" property="phonenum"/>
+            <result column="is_admin" property="isAdmin"/>
+        </association>
+
+    </resultMap>
+    
+    <sql id="commentColumnClause">
+          comment_id,
+          posts_id,
+          comment_user_id,
+          comment_text,
+          comment_date,
+          user_id,
+          user_head,
+          user_name,
+          user_mail,
+          user_birthday,
+          user_sex,
+          user_phonenum,
+          is_admin
+    </sql>
+
+
+    <sql id="leftJoinFrom">
+      FROM posts_comment pc
+      LEFT JOIN forum_user fu ON pc.comment_user_id=fu.user_id
+    </sql>
+
+
+    <sql id="dynamicWhere">
+        <where>
+            <if test="postsComment.commentId != null">
+                AND comment_id = #{postsComment.commentId}
+            </if>
+            <if test="postsComment.postsId != null">
+                AND posts_id = #{postsComment.postsId}
+            </if>
+            <if test="postsComment.commentUserId != null">
+                AND comment_user_id = #{postsComment.commentUserId}
+            </if>
+            <if test="postsComment.commentText != null and postsComment.commentText !=''">
+                AND comment_text LIKE concat(concat('%',#{postsComment.commentText}),'%')
+            </if>
+
+        </where>
+    </sql>
+
+    <insert id="addPostsComment" useGeneratedKeys="true" keyProperty="comment_id" parameterType="com.hnie.forum.domain.PostsComment">
+        INSERT INTO
+            posts_comment (posts_id, comment_user_id, comment_text,comment_date)
+        VALUES
+            (#{postsId},#{commentUserId},#{commentText},#{commentDate})
+    </insert>
+
+    <delete id="deletePostsCommentByCommentId" parameterType="java.lang.Integer">
+        DELETE FROM
+            posts_comment
+        WHERE
+            comment_id=#{commentId}
+    </delete>
+
+    <update id="updatePostsCoumment" parameterType="com.hnie.forum.domain.PostsComment">
+        UPDATE
+            posts_comment
+        SET
+            posts_id = #{postsId},
+            comment_user_id = #{commentUserId},
+            comment_text = #{commentText}
+        WHERE
+            comment_id = #{commentId}
+    </update>
+
+    <select id="findPostsCommentByCommentPagination" resultMap="BaseResultMap" parameterType="com.hnie.forum.vo.PostsCommentPagination">
+        SELECT
+        <include refid="commentColumnClause"/>
+        <include refid="leftJoinFrom"/>
+        <include refid="dynamicWhere"/>
+        ORDER BY comment_date ASC,comment_id ASC
+        LIMIT #{pageNo},#{pageSize}
+    </select>
+
+    <select id="findCountByCommentPagination" resultType="java.lang.Integer" parameterType="com.hnie.forum.vo.PostsCommentPagination">
+        SELECT count(*)
+        FROM posts_comment
+        <include refid="dynamicWhere"/>
+    </select>
+
+    <select id="findPostsCommentCount" resultType="java.lang.Integer">
+        SELECT count(*)
+        FROM posts_comment
+    </select>
+
+</mapper>

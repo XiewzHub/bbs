@@ -1,0 +1,210 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper
+        PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+        "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+
+<mapper namespace="com.hnie.forum.mapper.PostsMapper">
+
+    <resultMap id="BaseResultMap" type="com.hnie.forum.domain.Posts">
+        <id column="postsId" jdbcType="INTEGER" property="id"/>
+        <result column="title" jdbcType="VARCHAR" property="title"/>
+        <result column="srcText" jdbcType="VARCHAR" property="srcText"/>
+        <result column="text" jdbcType="VARCHAR" property="text"/>
+        <result column="author" jdbcType="VARCHAR" property="author"/>
+        <result column="date" jdbcType="VARCHAR" property="date"/>
+        <result column="commentNum" jdbcType="INTEGER" property="commentNum"/>
+        <result column="viewNum" jdbcType="INTEGER" property="viewNum"/>
+        <result column="setTop" jdbcType="INTEGER" property="setTop"/>
+        <result column="mobileId" jdbcType="INTEGER" property="mobileId"/>
+        <association property="mobileType" javaType="com.hnie.forum.domain.MobileType">
+            <id column="MOBI_ID" property="mobiId"/>
+            <result column="mobi_brand" property="mobiBrand"/>
+            <result column="mobi_series" property="mobiSeries"/>
+            <result column="mobi_type" property="mobiType"/>
+            <result column="mobi_img" property="mobiImg"/>
+            <result column="mobi_description" property="mobiDescription"/>
+        </association>
+        <association property="user" javaType="com.hnie.forum.domain.User">
+            <id column="USER_ID" property="id" />
+            <result column="user_head" property="head"/>
+            <result column="user_name" property="name"/>
+            <result column="user_mail" property="mail"/>
+            <result column="user_birthday" property="birthday"/>
+            <result column="user_sex" property="sex"/>
+            <result column="user_phonenum" property="phonenum"/>
+        </association>
+        <association property="postsCarousel" javaType="com.hnie.forum.domain.PostsCarousel">
+            <id column="carouselId" property="carouselId" />
+            <result column="carouselPostsId" property="postsId"/>
+        </association>
+    </resultMap>
+    
+    <sql id="postsColumnClause">
+        fp.id AS "postsId",
+        p_title as "title",
+        p_srctext as "srcText",
+        p_text as text,
+        p_author as author,
+        P_date as "date",
+        comment_num as "commentNum",
+        view_num as "viewNum",
+        set_top as "setTop",
+        mobile_id AS "mobileId",
+        MOBI_ID,
+        mobi_brand,
+        mobi_series,
+        mobi_type,
+        mobi_img,
+        mobi_description,
+        USER_ID,
+        user_head,
+        user_name,
+        user_birthday,
+        user_sex,
+        user_phonenum,
+        pc.id AS "carouselId",
+        pc.posts_id AS "carouselPostsId"
+    </sql>
+
+    <sql id="leftJoinFrom">
+        FROM forum_posts fp
+        LEFT JOIN mobile_type mt ON mt.mobi_id=fp.mobile_id
+        LEFT JOIN forum_user fu ON fp.p_author=fu.user_name
+        LEFT JOIN posts_carousel pc ON fp.id=pc.posts_id
+    </sql>
+
+    <sql id="dynamicWhere">
+        <where>
+            <if test="posts.author != null and posts.author != ''">
+                AND p_author LIKE #{posts.author}
+            </if>
+            <if test="posts.title != null and posts.title !=''">
+                AND p_title LIKE concat(concat('%',#{posts.title}),'%')
+            </if>
+            <if test="posts.text != null and posts.text !=''">
+                OR p_text LIKE concat(concat('%',#{posts.text}),'%')
+            </if>
+            <if test="posts.setTop != null and posts.setTop!=''">
+                AND set_top = #{posts.setTop}
+            </if>
+            <if test="posts.mobileId != null and posts.mobileId != ''">
+                AND mobile_id = #{posts.mobileId}
+            </if>
+        </where>
+    </sql>
+
+    <!--添加-->
+    <insert id="addPosts" useGeneratedKeys="true" keyProperty="id" parameterType="com.hnie.forum.domain.Posts" >
+        INSERT INTO
+            forum_posts (p_title,p_srctext, p_text, p_author, p_date,mobile_id)
+        VALUES
+            (#{title},#{srcText},#{text},#{author},#{date},#{mobileId})
+    </insert>
+
+    <delete id="deletePostsById" parameterType="java.lang.Integer">
+        DELETE FROM
+            forum_posts
+        WHERE
+            id=#{postsId}
+    </delete>
+
+    <!--找出有的帖子-->
+    <select id="findAllPosts" resultMap="BaseResultMap" >
+        SELECT
+            <include refid="postsColumnClause"/>
+
+        <include refid="leftJoinFrom"/>
+
+    </select>
+
+    <!--根据主键id查帖子-->
+    <select id="findPostsById" parameterType="int" resultMap="BaseResultMap" >
+        SELECT
+            <include refid="postsColumnClause"/>
+
+            <include refid="leftJoinFrom"/>
+        WHERE
+            fp.id = #{id}
+    </select>
+    <!--更新帖子-->
+    <update id="updatePosts" parameterType="com.hnie.forum.domain.Posts">
+        UPDATE
+            forum_posts
+        SET
+            p_title = #{title},
+            p_srctext = #{srcText},
+            p_text = #{text},
+            p_author = #{author},
+            p_date = #{date},
+            comment_num = #{commentNum},
+            view_num = #{viewNum},
+            mobile_id=#{mobileId}
+        WHERE
+            id = #{id}
+    </update>
+
+    <update id="setPostsTop" parameterType="java.lang.Integer" >
+        UPDATE forum_posts
+        SET set_top=1
+        WHERE id=#{postsId}
+    </update>
+
+    <update id="cancelPostsTop" parameterType="java.lang.Integer" >
+        UPDATE forum_posts
+        SET set_top=0
+        WHERE id=#{postsId}
+    </update>
+
+    <select id="findPostsOrderViewTop" resultMap="BaseResultMap">
+        SELECT
+            <include refid="postsColumnClause"></include>
+
+            <include refid="leftJoinFrom"/>
+        ORDER BY
+            set_top DESC , view_num DESC
+    </select>
+
+    <select id="findAllPostsPages" resultMap="BaseResultMap" parameterType="java.util.HashMap">
+        SELECT
+            <include refid="postsColumnClause"></include>
+
+            <include refid="leftJoinFrom"/>
+        ORDER BY
+        set_top DESC , view_num DESC
+        LIMIT #{pageNo},#{pageSize}
+    </select>
+
+    <select id="findPostsCount" resultType="java.lang.Integer">
+        SELECT count(*)
+        FROM
+        forum_posts
+    </select>
+
+    <!--按照不同条件查找-->
+    <select id="findPostsPageByPostsPagination" resultMap="BaseResultMap" parameterType="com.hnie.forum.vo.PostsPagination">
+        SELECT
+            <include refid="postsColumnClause"/>
+         <include refid="leftJoinFrom"/>
+            <include refid="dynamicWhere"/>
+        ORDER BY
+        set_top DESC , view_num DESC, fp.id ASC
+        LIMIT #{pageNo},#{pageSize}
+    </select>
+
+
+
+    <select id="findPostsCountByPostsPagination" parameterType="com.hnie.forum.vo.PostsPagination" resultType="java.lang.Integer">
+        SELECT
+            count(*)
+        FROM forum_posts
+            <include refid="dynamicWhere"/>
+    </select>
+    <select id="findPostsCountByUserId" parameterType="java.lang.String" resultType="java.lang.Integer">
+        SELECT
+            count(*)
+        FROM forum_posts
+        WHERE
+            p_author LIKE #{userName}
+    </select>
+
+</mapper>

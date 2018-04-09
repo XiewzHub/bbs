@@ -1,0 +1,99 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper
+        PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+        "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+
+<mapper namespace="com.hnie.forum.mapper.UserMapper">
+
+    <sql id="userColumnClause">
+        user_id as "id",
+        user_name as "name",
+        user_head AS "head",
+        user_password AS "password",
+        user_mail AS "mail",
+        user_birthday AS "birthday",
+        user_sex AS "sex",
+        user_phonenum AS "phonenum",
+        is_admin AS "isAdmin"
+    </sql>
+
+    <!--查询所有用户-->
+    <select id="findAllUsers" resultType="com.hnie.forum.domain.User">
+        SELECT
+            <include refid="userColumnClause"/>
+        FROM
+            forum_user
+    </select>
+
+    <!--添加用户-->
+    <insert id="addUser" parameterType="com.hnie.forum.domain.User">
+        INSERT
+        INTO
+            forum_user (user_name,user_password,user_mail,user_head,user_birthday,user_sex,user_phonenum)
+        VALUES
+            (#{name},#{password},#{mail},#{head},#{birthday},#{sex},#{phonenum})
+    </insert>
+
+    <update id="updateUser" parameterType="com.hnie.forum.domain.User">
+        UPDATE forum_user
+        SET
+            user_head=#{head},
+            user_name=#{name},
+            user_mail=#{mail},
+            user_birthday=#{birthday},
+            user_sex=#{sex},
+            user_phonenum=#{phonenum}
+        WHERE
+            user_id=#{id}
+    </update>
+
+    <!--删除用户-->
+    <delete id="deleteUser" parameterType="com.hnie.forum.domain.User">
+        DELETE
+        FROM
+            forum_user
+        WHERE
+            user_id = #{id}
+    </delete>
+
+    <!--根据用户id查询用户-->
+    <select id="findUserById" parameterType="int" resultType="com.hnie.forum.domain.User">
+        SELECT
+            <include refid="userColumnClause"/>
+        FROM
+            forum_user
+        WHERE
+            user_id = #{id}
+    </select>
+
+
+    <select id="selectUserByLogin" parameterType="com.hnie.forum.domain.User" resultType="com.hnie.forum.domain.User">
+        SELECT
+            <include refid="userColumnClause"/>
+        FROM
+            forum_user
+        <where>
+            <trim prefix="(" suffixOverrides="OR" suffix=")">
+                <if test="name != null ">
+                      user_name=#{name}
+                </if>
+                <if test="phonenum != null ">
+                     OR user_phonenum=#{name}
+                </if>
+            </trim>
+            <if test="password != null">
+               AND user_password=#{password}
+            </if>
+        </where>
+    </select>
+
+    <select id="findUserByName" resultType="com.hnie.forum.domain.User">
+        SELECT
+            <include refid="userColumnClause"/>
+        FROM
+            forum_user
+        WHERE
+            user_name=#{name}
+    </select>
+
+</mapper>

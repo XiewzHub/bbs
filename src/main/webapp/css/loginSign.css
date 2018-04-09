@@ -1,0 +1,50 @@
+/*注册与登录页面的css*/
+.backgroundImg{
+
+    background-size: 10% 10%;
+    background-position:center;
+}
+
+/*设置登录框的位置：高度*/
+.intervalUpDown{
+    margin-top: 15%;
+    padding-top: 5px;
+    background-color: white;
+
+}
+/*设置内边框*/
+.padding-LR-0per{
+    padding-right: 0%;
+    padding-left: 0%;
+}
+.padding-10per{
+    padding: 10% 10%
+}
+.padding-top-7px{
+    padding-top: 7px;
+}
+/*设置字体*/
+.font-set-pub{
+    font-family: 楷体;
+    font-size: 16px;
+}
+
+/*设置网站全屏背景图片*/
+#bg {
+    position:fixed;
+    top:0;
+    left:0;
+    width:100%;
+    height:100%;
+}
+#bg img {
+    position:absolute;
+    left:0;
+    right:0;
+    bottom:0;
+    margin:auto;
+    width:100%;
+    height:100%;
+    z-index:-1;
+}
+

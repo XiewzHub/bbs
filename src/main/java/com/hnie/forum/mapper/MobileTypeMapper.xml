@@ -1,0 +1,153 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper
+        PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+        "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+
+<mapper namespace="com.hnie.forum.mapper.MobileTypeMapper">
+
+    <sql id="mobiTypeColumnClause">
+        mobi_id AS "mobiId",
+        mobi_brand AS "mobiBrand",
+        mobi_series AS "mobiSeries",
+        mobi_type AS "mobiType",
+        mobi_img AS "mobiImg",
+        mobi_description AS "mobiDescription"
+    </sql>
+
+    <sql id="orderByDefault">
+        ORDER BY
+        mobi_brand ASC ,mobi_series ASC ,mobi_type ASC
+    </sql>
+
+    <sql id="pageAndWhere">
+        <where>
+            <if test="mobile.mobiBrand != null and mobile.mobiBrand != ''">
+                AND mobi_brand LIKE #{mobile.mobiBrand}
+            </if>
+            <if test="mobile.mobiSeries != null">
+                AND mobi_series LIKE #{mobile.mobiSeries}
+            </if>
+            <if test="mobile.mobiType != null and mobile.mobiType != ''">
+                AND mobi_type LIKE #{mobile.mobiType}
+            </if>
+        </where>
+    </sql>
+
+    <select id="findAllMobileTypes" resultType="com.hnie.forum.domain.MobileType">
+        SELECT
+            <include refid="mobiTypeColumnClause"/>
+        FROM
+            mobile_type
+    </select>
+
+    <!--传入手机对象，查询出手机对象-->
+    <select id="findMobileTypeByMobileType" resultType="com.hnie.forum.domain.MobileType" parameterType="com.hnie.forum.domain.MobileType">
+        SELECT
+            <include refid="mobiTypeColumnClause"/>
+        FROM
+            mobile_type
+        <where>
+            <if test="mobiId != null and mobiId != ''">
+                AND mobi_id = #{mobiId}
+            </if>
+            <if test="mobiBrand != null and mobiBrand != ''">
+                and mobi_brand LIKE #{mobiBrand}
+            </if>
+            <if test="mobiSeries != null">
+                AND mobi_series LIKE #{mobiSeries}
+            </if>
+            <if test="mobiType != null">
+                AND mobi_type LIKE #{mobiType}
+            </if>
+        </where>
+    </select>
+
+    <update id="updateMobileType" parameterType="com.hnie.forum.domain.MobileType">
+        UPDATE mobile_type
+        SET
+            mobi_brand=#{mobiBrand},
+            mobi_series=#{mobiSeries},
+            mobi_type=#{mobiType},
+            mobi_img=#{mobiImg},
+            mobi_description=#{mobiDescription}
+        WHERE
+            mobi_id=#{mobiId}
+    </update>
+
+    <insert id="addMobileType" parameterType="com.hnie.forum.domain.MobileType" useGeneratedKeys="true" keyProperty="mobiId">
+        INSERT INTO mobile_type
+            (mobi_brand, mobi_series, mobi_type, mobi_img, mobi_description)
+        VALUES
+            (#{mobiBrand},#{mobiSeries},#{mobiType},#{mobiImg},#{mobiDescription})
+    </insert>
+
+    <delete id="deleteMobiTypeByMobiId" parameterType="java.lang.Integer">
+        DELETE FROM mobile_type
+        WHERE mobi_id=#{mobiId}
+    </delete>
+
+    <select id="findMobileTypeByMobilePagination" parameterType="com.hnie.forum.vo.MobilePagination" resultType="com.hnie.forum.domain.MobileType">
+        SELECT
+            <include refid="mobiTypeColumnClause"/>
+        FROM
+            mobile_type
+            <include refid="pageAndWhere"/>
+            <include refid="orderByDefault"/>
+
+        LIMIT #{pageNo},#{pageSize}
+    </select>
+
+    <select id="findCountByMobilePagination" resultType="java.lang.Integer" parameterType="com.hnie.forum.vo.MobilePagination">
+        SELECT count(*)
+        FROM mobile_type
+        <include refid="pageAndWhere"/>
+    </select>
+
+    <select id="findMobileBrandList" resultType="java.lang.String">
+        SELECT DISTINCT mobi_brand AS "mobiBrand"
+        FROM mobile_type
+        <include refid="orderByDefault"/>
+    </select>
+
+    <select id="findMobiSeriesByMobiBrand" resultType="java.lang.String" parameterType="java.lang.String">
+        SELECT DISTINCT
+            mobi_series AS "mobiSeries"
+        FROM
+            mobile_type
+        <where>
+            <if test="mobiBrand">
+                mobi_brand LIKE #{mobiBrand}
+            </if>
+        </where>
+        <include refid="orderByDefault"/>
+    </select>
+
+    <select id="findmobiTypeByMobiSeries" parameterType="java.lang.String" resultType="java.lang.String">
+        SELECT DISTINCT
+            mobi_type AS "mobiType"
+        FROM
+            mobile_type
+        <where>
+            <if test="mobiSeries != null">
+                mobi_series LIKE #{mobiSeries}
+            </if>
+        </where>
+        <include refid="orderByDefault"/>
+    </select>
+
+    <select id="findmobiTypeByBrandAndSeries" parameterType="java.util.Map" resultType="com.hnie.forum.domain.MobileType">
+        SELECT mobi_type AS "mobiType"
+        FROM mobile_type
+        <where>
+            <if test="mobiBrand != null">
+                AND mobi_brand LIKE #{mobiBrand}
+            </if>
+            <if test="mobiSeries != null">
+                AND mobi_series LIKE #{mobiSeries}
+            </if>
+        </where>
+        <include refid="orderByDefault"/>
+    </select>
+
+
+</mapper>

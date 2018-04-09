@@ -1,0 +1,132 @@
+
+/*帖子 列表 的头部颜色设计*/
+.panel-head-color{
+    background-color:#888888;
+    color:#ffffff;
+}
+
+/*帖子查看的标题字体*/
+.posts-view-head{
+    font-size: x-large;
+}
+
+/*头像大小和圆角设置*/
+.head-style-set{
+    width: 50px;
+    height: 50px;
+    border-radius: 50%;
+    display: block;
+}
+
+/*去除li前面的点并调整间距*/
+.remove-li-point li{
+    list-style: none;
+    padding-top: 16px;
+}
+
+/*分割线*/
+.divider {
+    height: 1px;
+    margin: 6px 0 0 0;
+    overflow: hidden;
+    background-color: #e5e5e5;
+    padding: 0 0 0 0;
+}
+
+/*标题字体设置*/
+.forum-title{
+    font-weight: 500;
+    font-size: 16px;
+    color: #0f0f0f;
+
+}
+/*鼠标移动效果*/
+.forum-title:hover{
+    color: #deac2b;
+    /*去除下划线*/
+    text-decoration: none;
+}
+
+/*标题下的介绍的css*/
+.introduce-style{
+    margin-top: 6px;
+    border-bottom: 1px;
+    padding-bottom: 11px;
+}
+/*字体设为灰色*/
+.introduce-font-style a,.introduce-font-style span{
+    color: #888888;
+}
+
+/*作者等的间距*/
+.left-space{
+    margin-left: 5px;
+}
+/*观看置顶位置调整*/
+.eye-space {
+    float: right;
+    right: 5%;
+  /*  margin-right: 1px;
+    left: 280px;*/
+}
+/*评论数的间隙*/
+.comment-space {
+    float: right;
+    right: 10%;
+   /* margin-right: 0px;
+    left: 290px;*/
+}
+
+
+.mobile-title-style{
+    font-family: "等线 Light";
+    font-weight: 500;
+    text-decoration: none;
+    color: #0f0f0f;
+    margin-left: 20px;
+}
+.mobile-title-style:hover{
+    text-decoration: none;
+    color: #761c19;
+}
+
+.title-margin-space{
+    margin-bottom: 40px;
+}
+
+.title-small-space{
+    margin-left: 225px;
+}
+
+.edit-mouse{
+
+}
+
+/*编辑的鼠标移动效果*/
+.edit-mouse:hover{
+    color: #deac2b;
+    /*去除下划线*/
+    text-decoration: none;
+}
+
+.user-info{
+    position: relative;
+    height: 80px;
+    padding: 20px;
+    background: #2b99cc;
+}
+.user-op{
+
+}
+.user-op li{
+    padding: 13px 0;
+    display: inline-block;
+    width: 80px;
+    text-align: center;
+    color: #fff;
+}
+
+.test1{
+    font-size: x-large;
+}
+

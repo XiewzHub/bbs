@@ -1,0 +1,38 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper
+        PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+        "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+
+<mapper namespace="com.hnie.forum.mapper.PostsCarouselMapper">
+
+    <sql id="postsCarouselColumn">
+        id AS "carouselId",
+        posts_id AS "postsId",
+        img_address AS "imgAddress",
+        posts_title AS "postsTitle",
+        posts_url AS "postsUrl"
+    </sql>
+
+    <insert id="addCarousel" parameterType="com.hnie.forum.domain.PostsCarousel" useGeneratedKeys="true" keyProperty="carouselId">
+        INSERT INTO
+            posts_carousel(posts_id, img_address, posts_title, posts_url)
+        VALUES
+            (#{postsId},#{imgAddress},#{postsTitle},#{postsUrl})
+    </insert>
+
+    <select id="findAllPostsCarousel" resultType="com.hnie.forum.domain.PostsCarousel">
+        SELECT
+            <include refid="postsCarouselColumn"/>
+        FROM
+            posts_carousel
+    </select>
+
+    <delete id="deleteCarouselByPostsId" parameterType="int">
+        DELETE FROM
+            posts_carousel
+        WHERE
+            posts_id=#{postsId}
+    </delete>
+
+
+</mapper>

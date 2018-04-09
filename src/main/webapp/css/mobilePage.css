@@ -1,0 +1,65 @@
+* {
+    list-style-type: none;
+    font: "微软雅黑";
+    text-decoration: none;
+}
+
+table tr td{text-align:center; }
+
+.mobilehead {
+    font-size: 32px;
+}
+
+.mobileType { /* border:1px #FF0000 solid;*/
+    width: 950px;
+    height: 50px;
+    margin: 0 auto;
+    margin-top: 50px;
+}
+
+.mobileType li {
+    float: left;
+    text-align: center;
+    width: auto;
+    /*height:50px;*/
+    margin-left: 20px;
+}
+
+.mobileType li a {
+    color: #FFFFFF;
+    text-decoration: none;
+    font-size: large;
+}
+
+.mobileType li a:hover {
+    color: #DB4A4A;
+}
+
+.mobileContent table a {
+    display: block;
+    text-align: center;
+    text-decoration: none;
+    margin: 30px auto;
+}
+
+.mobileContent table {
+    margin: 0 auto;
+    background-color: #FFFFFF;
+    width: 120%;
+    height: 320px;
+}
+
+.mobileContent table p {
+    height: 30px;
+    width: 50%;
+    margin: 0px auto;
+}
+
+.mobileContent table p:hover {
+    color: #ffffff;
+    background-color: #FF5f19;
+}
+
+.mobileType li a[class='active']{
+    color: #DB4A4A;
+}
