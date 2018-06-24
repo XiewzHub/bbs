@@ -1,7 +1,7 @@
 /**
  * Created by Administrator on 2017/5/19.
  */
-function paginationControl() {
+function paginationControl(contextPath) {
     // alert(param.pageNo);
     $("a[name='pagination']").each(function (index, elem) {
         $(elem).unbind('click');
@@ -10,7 +10,7 @@ function paginationControl() {
             var pageSize = $(this).attr('pageSize');
             var pageAllNo = $(this).attr('pageAllNo');
             var postsId = $("#postsId1").val();
-            var url = "/smart_froum/postsComment/" + postsId + "/ajaxFindComment";
+            var url = contextPath+"/postsComment/" + postsId + "/ajaxFindComment";
 
             var commentPagination = {
                 "pageNo": pageNo,
@@ -30,7 +30,7 @@ function paginationControl() {
                 success: function (data) {
                     $("#commentAreaDiv").html(data.html);
                     //成功后再次绑定
-                    paginationControl();
+                    paginationControl(contextPath);
                 },
                 error: function (data) {
                     alert(data.status);
@@ -55,14 +55,14 @@ function paginationControl() {
             if (pageNo == undefined || pageNo == "" || pageNo <= 0) {
                 alert("请输入页码")
             } else {
-                var url = "/smart_froum/postsComment/" + postsId + "/ajaxFindComment";
+                var url = contextPath+"/postsComment/" + postsId + "/ajaxFindComment";
                 var commentPagination = {
                     "pageNo": pageNo,
                     "pageSize": pageSize,
                     "pagesAllNo":pageAllNo
                 }
                 var jsonString = JSON.stringify(commentPagination);
-                alert(JSON.stringify(commentPagination));
+                // alert(JSON.stringify(commentPagination));
                 // var url = param.url;
                 $.ajax({
                     url: url,
@@ -72,7 +72,7 @@ function paginationControl() {
                     contentType: "application/json",
                     success: function (data) {
                         $("#commentAreaDiv").html(data.html);
-                        paginationControl();
+                        paginationControl(contextPath);
                     },
                     error: function (data) {
                         alert(data.status);

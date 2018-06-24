@@ -155,7 +155,8 @@
                     <script src="${pageContext.request.contextPath}/js-me/commentPagination.js"></script>
                     <script type="text/javascript">
                         $(function () {
-                            paginationControl();
+                            var contextPath = "${pageContext.request.contextPath}";
+                            paginationControl(contextPath);
                         });
                     </script>
 

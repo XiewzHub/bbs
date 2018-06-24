@@ -241,7 +241,7 @@
                 <artifactId>tomcat7-maven-plugin</artifactId>
                 <version>2.1</version>
                 <configuration>
-                    <path>/smart_froum</path>
+                    <path>/bbs</path>
                     <port>7777</port>
                     <server>tomcat7</server>
                     <!--<contextFile>src/main/resources/applicationContext.xml</contextFile>-->
@@ -280,7 +280,18 @@
             </plugin>-->
         </plugins>
 
+        <!--MyBatis配置文件的加载配置-->
         <resources>
+            <!--加载资源文件-->
+            <resource>
+                <directory>src/main/resources</directory>
+                <includes>
+                    <include>**/*.properties</include>
+                    <include>**/*.xml</include>
+                    <include>**/*.tld</include>
+                </includes>
+                <filtering>false</filtering>
+            </resource>
             <resource>
                 <directory>src/main/java</directory>
                 <includes>
@@ -290,6 +301,7 @@
                 <filtering>false</filtering>
             </resource>
         </resources>
+
     </build>
 
 

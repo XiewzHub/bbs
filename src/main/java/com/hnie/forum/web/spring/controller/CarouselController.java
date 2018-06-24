@@ -31,6 +31,9 @@ public class CarouselController {
              * 针对json字符串的乱码解决方案
              */
             response.setContentType("application/json;charset=UTF-8");//防止json串的数据传递乱码
+            int index = request.getContextPath().length();
+            String savePath = carousel.getImgAddress().substring(index);
+            carousel.setImgAddress(savePath);
 //            System.out.println(carousel);
             Integer id = this.carouselService.addPostsCarousel(carousel);
 

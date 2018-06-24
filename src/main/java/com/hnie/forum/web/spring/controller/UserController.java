@@ -84,7 +84,7 @@ public class UserController {
                 response.getWriter().write("{\"success\":0,\"message\":\"用户名或密码错误\"}");
             } else {
                 session.setAttribute("stuts", "已登录");
-                response.getWriter().write("{\"success\":1,\"message\":\"登录成功\",\"url\":\"/smart_froum/\"}");
+                response.getWriter().write("{\"success\":1,\"message\":\"登录成功\",\"url\":\""+session.getServletContext().getContextPath()+"/\"}");
             }
 
         } catch (IOException e) {

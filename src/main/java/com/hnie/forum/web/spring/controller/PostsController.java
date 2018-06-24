@@ -12,7 +12,7 @@ import com.hnie.forum.utils.FileUtils;
 import com.hnie.forum.utils.PostsUtils;
 import com.hnie.forum.vo.PostsCommentPagination;
 import com.hnie.forum.vo.PostsPagination;
-import com.sun.deploy.net.HttpResponse;
+// import com.sun.deploy.net.HttpResponse;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.validation.BindingResult;

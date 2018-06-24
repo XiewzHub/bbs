@@ -139,7 +139,7 @@ public class UploadController {
             String fileName = copyFileAndGetFileName(attach, rootPath);
 
 
-            response.getWriter().write("{\"success\": 1, \"message\":\"上传成功\",\"url\":\"/smart_froum/images/carousel/"
+            response.getWriter().write("{\"success\": 1, \"message\":\"上传成功\",\"url\":\""+request.getContextPath()+"/images/carousel/"
                     + fileName + "\"}");
 
         } catch (Exception e) {

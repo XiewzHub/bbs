@@ -46,7 +46,7 @@
                 <div class="item <c:if test="${status.index==0}">active</c:if>">
                     <center>
                         <a href="${pageContext.request.contextPath}${carousel.postsUrl}"><img
-                                src="${carousel.imgAddress}"
+                                src="${pageContext.request.contextPath}${carousel.imgAddress}"
                                 alt="First slide" height="500px">
                         </a>
                     </center>
