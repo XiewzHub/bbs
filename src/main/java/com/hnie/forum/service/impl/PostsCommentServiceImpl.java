@@ -57,7 +57,7 @@ public class PostsCommentServiceImpl implements PostsCommentService {
      * @param commentPagination
      * @return
      */
-    public StringBuffer getCommentHtml(PostsCommentPagination commentPagination) {
+    public StringBuffer getCommentHtml(PostsCommentPagination commentPagination,String contextPath) {
         StringBuffer html = new StringBuffer("");
         List<PostsComment> commentList = commentPagination.getPostsCommentList();
         Integer pageNo = commentPagination.getPageNo();
@@ -70,7 +70,7 @@ public class PostsCommentServiceImpl implements PostsCommentService {
             Integer count = ((pageNo - 1) * pageSize) + i + 1;
             html.append("<div class=\"fade-in\"><li class=\"row\">");
             html.append("<div class=\"col-md-2\">");
-            html.append("<a href=\"javascript:void(0);\"><img src=\"" + user.getHead() + "\"class=\"head-style-set\" style=\"width: 80px;height: 80px;\"></a>");
+            html.append("<a href=\"javascript:void(0);\"><img src=\"" + contextPath + user.getHead() + "\"class=\"head-style-set\" style=\"width: 80px;height: 80px;\"></a>");
             html.append("</div>");
 
             html.append("<div class=\"col-md-10\" style=\"float: left;\">");

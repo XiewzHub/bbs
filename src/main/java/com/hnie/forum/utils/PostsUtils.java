@@ -58,7 +58,7 @@ public class PostsUtils {
      * @return 完整内容的帖子
      */
     public static Posts getPostsText(Posts posts, String rootPath) {
-        if (posts.getId() > 87) {
+        // if (posts.getId() > 87) {
             String textPath = posts.getText();
             String srcTextPath = posts.getSrcText();
             try {
@@ -71,7 +71,7 @@ public class PostsUtils {
             } catch (IOException e) {
                 e.printStackTrace();
             }
-        }
+        // }
 
         return posts;
     }

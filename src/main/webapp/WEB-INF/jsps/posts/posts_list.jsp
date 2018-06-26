@@ -107,7 +107,7 @@
                                     <!--头像-->
                                     <div class="col-md-2">
                                         <a href="${pageContext.request.contextPath}/posts/${posts.id}/view">
-                                            <img src="${posts.user.head}"
+                                            <img src="${pageContext.request.contextPath}${posts.user.head}"
                                                  class="head-style-set">
                                         </a>
                                     </div>

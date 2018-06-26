@@ -120,7 +120,7 @@
                                     <li class="row">
                                         <!--头像-->
                                         <div class="col-md-2">
-                                            <a href="javascript:void(0);"><img src="${postsComment.user.head}"
+                                            <a href="javascript:void(0);"><img src="${pageContext.request.contextPath}${postsComment.user.head}"
                                                                                class="head-style-set"
                                                                                style="width: 80px;height: 80px;">
                                             </a>

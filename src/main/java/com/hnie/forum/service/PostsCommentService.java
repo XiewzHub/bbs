@@ -19,6 +19,6 @@ public interface PostsCommentService {
 
     public StringBuffer getPaginationHtml(PostsCommentPagination commentPagination);
 
-    public StringBuffer getCommentHtml(PostsCommentPagination commentPagination);
+    public StringBuffer getCommentHtml(PostsCommentPagination commentPagination,String contextPath);
 
 }

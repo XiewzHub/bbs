@@ -53,8 +53,8 @@ public class PostsServiceImpl implements PostsService {
         // 取出srcText和text内容
         String srcText = posts.getSrcText();
         String text = posts.getText();
-        posts.setText("");
-        posts.setSrcText("");
+        // posts.setText("");
+        // posts.setSrcText("");
         //获取路径
         Integer rowNum = postsMapper.addPosts(posts);
         String rootPath = request.getSession().getServletContext().getRealPath("");
@@ -125,7 +125,7 @@ public class PostsServiceImpl implements PostsService {
 
         posts.setSrcText(postsById.getSrcText());
         posts.setText(postsById.getText());
-        modifyPosts(posts);
+        // modifyPosts(posts);
     }
 
     @Override

@@ -53,7 +53,7 @@ public class PostsCommentController {
 
     @RequestMapping(value = "{postsId}/ajaxFindComment", method = RequestMethod.POST)
     @ResponseBody
-    public Map findCommentByPostsId(@RequestBody PostsCommentPagination commentPagination, @PathVariable Integer postsId) {
+    public Map findCommentByPostsId(@RequestBody PostsCommentPagination commentPagination, @PathVariable Integer postsId,HttpSession session) {
         commentPagination.getPostsComment().setPostsId(postsId);
         //如果总页数小于要跳转的页码就设置为最后一页
         if (commentPagination.getPagesAllNo() < commentPagination.getPageNo()) {
@@ -64,18 +64,19 @@ public class PostsCommentController {
 
         Map result = new HashMap();
         //打印html页面
-        StringBuffer html = getHtml(commentPagination);
+        String contextPath = session.getServletContext().getContextPath();
+        StringBuffer html = getHtml(commentPagination,contextPath);
 
         result.put("html", html);
         return result;
     }
 
-    public StringBuffer getHtml(PostsCommentPagination commentPagination) {
+    public StringBuffer getHtml(PostsCommentPagination commentPagination,String contextPath) {
         StringBuffer html = new StringBuffer("");
         //生成分页栏
         html.append(postsCommentService.getPaginationHtml(commentPagination));
         //生成内容
-        html.append(postsCommentService.getCommentHtml(commentPagination));
+        html.append(postsCommentService.getCommentHtml(commentPagination,contextPath));
         //生成分页栏
         html.append(postsCommentService.getPaginationHtml(commentPagination));
         return html;
