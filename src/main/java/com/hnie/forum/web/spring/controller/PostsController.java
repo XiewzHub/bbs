@@ -7,12 +7,14 @@ import com.hnie.forum.service.MobileTypeService;
 import com.hnie.forum.service.PostsCarouselService;
 import com.hnie.forum.service.PostsCommentService;
 import com.hnie.forum.service.PostsService;
+import com.hnie.forum.service.SequenceService;
 import com.hnie.forum.utils.ControllerUtils;
 import com.hnie.forum.utils.FileUtils;
 import com.hnie.forum.utils.PostsUtils;
 import com.hnie.forum.vo.PostsCommentPagination;
 import com.hnie.forum.vo.PostsPagination;
 // import com.sun.deploy.net.HttpResponse;
+import org.apache.log4j.Logger;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.validation.BindingResult;
@@ -40,9 +42,13 @@ import java.util.*;
 @Controller
 @RequestMapping("/posts")
 public class PostsController {
+    private Logger logger = Logger.getLogger(getClass());
 
     @Resource(name = "postsService")
     private PostsService postsService;
+
+    @Resource(name = "sequenceService")
+    private SequenceService sequenceService;
 
     @Resource(name = "postsCarouselService")
     private PostsCarouselService carouselService;
@@ -86,7 +92,9 @@ public class PostsController {
         posts.setAuthor(user.getName());
         posts.setMobileId(mobileType.getMobiId());
         increasePostsNum(session, user);
-//        插入一个帖子并查询返回受影响的行数
+        String nextSeq = sequenceService.getNextSeq("SEQ_POST_ID");
+        posts.setId(Integer.parseInt(nextSeq));
+//        插入一个帖子并查询返回流水号
         Integer num = postsService.addPost(posts,request);
 
         //获取图片上传的原路径
@@ -95,7 +103,7 @@ public class PostsController {
 //        创建图片上传的新路径
             String destPath = request.getSession().getServletContext().getRealPath("/posts/") + "\\" + posts.getId() + "\\resources";
             FileUtils.moveFile(srcPath, destPath);
-            System.out.println(FileUtils.deleteDir(new File(srcPath)));//删除文件夹
+            logger.info(FileUtils.deleteDir(new File(srcPath)));//删除文件夹
         }
 
         // TODO: 2017/5/14 这里跳转是重定向，一般跳转到置顶板块的帖子列表

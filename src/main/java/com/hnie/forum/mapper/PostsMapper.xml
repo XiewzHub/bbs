@@ -94,11 +94,11 @@
     </sql>
 
     <!--添加-->
-    <insert id="addPosts" useGeneratedKeys="true" keyProperty="id" parameterType="com.hnie.forum.domain.Posts" >
+    <insert id="addPosts" useGeneratedKeys="false" keyProperty="id" parameterType="com.hnie.forum.domain.Posts" >
         INSERT INTO
-            forum_posts (p_title,p_srctext, p_text, p_author, p_date,mobile_id)
+            forum_posts (id,p_title,p_srctext, p_text, p_author, p_date,mobile_id)
         VALUES
-            (#{title},#{srcText},#{text},#{author},#{date},#{mobileId})
+            (#{id},#{title},#{srcText},#{text},#{author},#{date},#{mobileId})
     </insert>
 
     <delete id="deletePostsById" parameterType="java.lang.Integer">

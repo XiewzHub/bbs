@@ -1,6 +1,7 @@
 package com.hnie.forum.utils;
 
 import com.hnie.forum.domain.Posts;
+import com.hnie.forum.exception.BbsException;
 import org.apache.commons.io.*;
 import org.apache.commons.io.FileUtils;
 
@@ -59,10 +60,11 @@ public class PostsUtils {
      */
     public static Posts getPostsText(Posts posts, String rootPath) {
         // if (posts.getId() > 87) {
-            String textPath = posts.getText();
-            String srcTextPath = posts.getSrcText();
-            try {
-                byte[] byteArray = FileUtils.readFileToByteArray(new File(rootPath + textPath));
+            String textPath = posts.getText().replace("\\",File.separator);
+            String srcTextPath = posts.getSrcText().replace("\\",File.separator);
+        // String separator = File.separator;
+        try {
+                // byte[] byteArray = FileUtils.readFileToByteArray(new File(rootPath + "123.xnk"));
                 String text = new String(FileUtils.readFileToByteArray(new File(rootPath + textPath)));
                 String srcText = new String(FileUtils.readFileToByteArray(new File(rootPath + srcTextPath)));
                 posts.setText(text);
@@ -70,6 +72,7 @@ public class PostsUtils {
 
             } catch (IOException e) {
                 e.printStackTrace();
+                throw new BbsException("请确认是"+textPath+"与"+srcTextPath+"否存在",e);
             }
         // }
 

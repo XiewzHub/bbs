@@ -295,7 +295,6 @@
             </plugin>-->
         </plugins>
 
-        <!--MyBatis配置文件的加载配置-->
         <resources>
             <!--加载资源文件-->
             <resource>
@@ -320,6 +319,7 @@
                 <directory>src/main/java</directory>
                 <includes>
                     <include>**/*.properties</include>
+                    <!--MyBatis配置文件的加载配置-->
                     <include>**/*.xml</include>
                 </includes>
                 <filtering>false</filtering>

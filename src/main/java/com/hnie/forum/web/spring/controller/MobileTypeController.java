@@ -123,7 +123,7 @@ public class MobileTypeController {
      */
     private void changeMobiTypeCode(MobileType mobileType) {
         String charseName = String.valueOf(StringHttpMessageConverter.DEFAULT_CHARSET);
-        charseName = "UTF-8";
+        // charseName = "UTF-8";
         String mobiBrand = mobileType.getMobiBrand();
         String mobiSeries = mobileType.getMobiSeries();
         String mobiType = mobileType.getMobiType();

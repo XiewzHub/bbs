@@ -56,11 +56,13 @@ public class PostsServiceImpl implements PostsService {
         // posts.setText("");
         // posts.setSrcText("");
         //获取路径
-        Integer rowNum = postsMapper.addPosts(posts);
         String rootPath = request.getSession().getServletContext().getRealPath("");
         String srcTextPath = rootPath + "\\posts\\" + posts.getId() + "\\resources\\text\\srcText.md";
         String textPath = rootPath + "\\posts\\" + posts.getId() + "\\resources\\text\\text.txt";
 
+        // 替换分割符号，不同系统的文件夹分割符号不同
+        srcTextPath.replace("\\",File.separator);
+        textPath.replace("\\",File.separator);
 
         //保存文本并返回路径
         FileUtils.writeByteArrayToFile(new File(srcTextPath), srcText.getBytes(), false);
@@ -69,16 +71,18 @@ public class PostsServiceImpl implements PostsService {
         // 分割路径，获取相对路径
         srcTextPath = srcTextPath.replace(rootPath, "");
         textPath = textPath.replace(rootPath, "");
-        //得到插入的id
-        Integer postsId = posts.getId();
-        posts = this.findPostsById(postsId);
+        // posts = this.findPostsById(postsId);
 
         //修改此贴
         posts.setSrcText(srcTextPath);
         posts.setText(textPath);
-        this.modifyPosts(posts);
+        // this.modifyPosts(posts);
+        postsMapper.addPosts(posts);
 
-        return rowNum;
+        //得到插入的id
+        Integer postsId = posts.getId();
+
+        return postsId;
     }
 
     @Override
