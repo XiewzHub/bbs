@@ -106,7 +106,8 @@
     <select id="findMobileBrandList" resultType="java.lang.String">
         SELECT DISTINCT mobi_brand AS "mobiBrand"
         FROM mobile_type
-        <include refid="orderByDefault"/>
+        ORDER BY
+        mobi_brand ASC
     </select>
 
     <select id="findMobiSeriesByMobiBrand" resultType="java.lang.String" parameterType="java.lang.String">
@@ -119,7 +120,9 @@
                 mobi_brand LIKE #{mobiBrand}
             </if>
         </where>
-        <include refid="orderByDefault"/>
+        ORDER BY
+        mobi_series ASC
+        <!--<include refid="orderByDefault"/>-->
     </select>
 
     <select id="findmobiTypeByMobiSeries" parameterType="java.lang.String" resultType="java.lang.String">

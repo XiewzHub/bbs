@@ -19,7 +19,31 @@
     <!--注解扫描包-->
     <!--<mvc:default-servlet-handler />-->
     <context:component-scan base-package="com.hnie.forum.web.spring"/>
-    <mvc:annotation-driven conversion-service="conversionService"/>
+    <mvc:annotation-driven  conversion-service="conversionService">
+        <mvc:message-converters register-defaults="true">
+            <!--<bean class="com.hnie.forum.web.spring.converter.UTF8StringHttpMessageConverter"/>-->
+            <bean class="org.springframework.http.converter.StringHttpMessageConverter">
+                <property name="supportedMediaTypes" value="text/html;charset=UTF-8"/>
+            </bean>
+        </mvc:message-converters>
+        <!--<mvc:message-converters>
+            <bean id="dateConverter" class="com.hnie.forum.web.spring.converter.UtilDateConverter">
+                <property name="patterns">
+                    <list>
+                        <value>yyyy-MM-dd</value>
+                        <value>yyyy/MM/dd</value>
+                    </list>
+                </property>
+            </bean>
+            &lt;!&ndash;<bean class="org.springframework.format.support.FormattingConversionServiceFactoryBean">
+                <property name="converters">
+                    <set>
+
+                    </set>
+                </property>
+            </bean>&ndash;&gt;
+        </mvc:message-converters>-->
+    </mvc:annotation-driven>
     <!--以下项不拦截，可以直接访问-->
     <mvc:resources mapping="/bootstrap-3.3.7/**" location="/bootstrap-3.3.7/*"/>
     <mvc:resources mapping="/css/**" location="/css/*"/>

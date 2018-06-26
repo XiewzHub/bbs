@@ -11,6 +11,7 @@ import com.hnie.forum.service.UserService;
 import com.hnie.forum.vo.Pagination;
 import com.hnie.forum.vo.PostsPagination;
 import org.apache.commons.collections.ListUtils;
+import org.apache.log4j.Logger;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.RequestMapping;
@@ -26,6 +27,7 @@ import java.util.List;
 @Controller
 @RequestMapping("/")
 public class HomeController {
+    private Logger logger = Logger.getLogger(getClass());
 
     @Resource(name = "postsCarouselService")
     private PostsCarouselService carouselService;
@@ -56,6 +58,7 @@ public class HomeController {
     }
 
     private void init(Model model, PostsPagination postsPagination) {
+        logger.info("查询单页数目："+postsPagination.getPageSize());
         // 查轮播列表
         List<PostsCarousel> postsCarouselList = carouselService.findAllPostsCarousel();
 //        反转list

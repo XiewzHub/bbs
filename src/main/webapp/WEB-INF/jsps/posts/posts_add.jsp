@@ -4,7 +4,8 @@
 <%@ taglib prefix="fmt" uri="http://java.sun.com/jsp/jstl/fmt" %>
 <html lang="en">
 <head>
-    <meta charset="UTF-8">
+    <%--<meta charset="UTF-8">--%>
+    <meta http-equiv="Content-Type" content="text/html; charset=UTF-8" />
     <title>这里可以发布你的Smart帖子</title>
     <link rel="stylesheet" href="${pageContext.request.contextPath}/css/style.css">
     <link rel="stylesheet" href="${pageContext.request.contextPath}/bootstrap-3.3.7/css/bootstrap.min.css">
@@ -106,6 +107,7 @@
                 data: requestData,
                 dataType: "json",
                 success: function (data) {
+                    // alert(data);
                     if (data.result == '成功') {
                         $("#seriesDiv").html(data.html);
                         $("#typeDiv").html('');
@@ -115,6 +117,9 @@
                     } else {//失败后处理
 
                     }
+                },
+                error:function (data) {
+                    // alert(data);
                 }
             });
         });
