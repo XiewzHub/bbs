@@ -1,17 +1,22 @@
 package com.hnie.forum.service.impl;
 
 import com.hnie.forum.domain.Posts;
+import com.hnie.forum.exception.BbsException;
 import com.hnie.forum.mapper.PostsMapper;
 import com.hnie.forum.service.PostsService;
+import com.hnie.forum.utils.MyFileUtils;
+import com.hnie.forum.utils.PostsUtils;
 import com.hnie.forum.vo.PostsPagination;
 import org.apache.commons.io.FileUtils;
 import org.apache.commons.lang.StringUtils;
+import org.apache.log4j.Logger;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
 import javax.annotation.Resource;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpSession;
+import java.io.BufferedWriter;
 import java.io.File;
 import java.io.IOException;
 import java.util.HashMap;
@@ -24,6 +29,7 @@ import java.util.Map;
 @Service("postsService")
 @Transactional
 public class PostsServiceImpl implements PostsService {
+    private Logger logger = Logger.getLogger(getClass());
 
     @Resource(name = "postsMapper")
     private PostsMapper postsMapper;
@@ -51,31 +57,29 @@ public class PostsServiceImpl implements PostsService {
         }
 
         // 取出srcText和text内容
-        String srcText = posts.getSrcText();
-        String text = posts.getText();
+        // String srcText = posts.getSrcText();
+        // String text = posts.getText();
         // posts.setText("");
         // posts.setSrcText("");
         //获取路径
         String rootPath = request.getSession().getServletContext().getRealPath("");
-        String srcTextPath = rootPath + "\\posts\\" + posts.getId() + "\\resources\\text\\srcText.md";
-        String textPath = rootPath + "\\posts\\" + posts.getId() + "\\resources\\text\\text.txt";
+        String srcTextPath = buildContentDirectory(posts, rootPath);
+        // String textPath = rootPath + "\\posts\\" + posts.getId() + "\\resources\\text\\text.txt";
+        PostsUtils.postsSave2File(srcTextPath,posts);
 
-        // 替换分割符号，不同系统的文件夹分割符号不同
-        srcTextPath.replace("\\",File.separator);
-        textPath.replace("\\",File.separator);
 
         //保存文本并返回路径
-        FileUtils.writeByteArrayToFile(new File(srcTextPath), srcText.getBytes(), false);
-        FileUtils.writeByteArrayToFile(new File(textPath), text.getBytes(), false);
+        // FileUtils.writeByteArrayToFile(new File(srcTextPath), srcText.getBytes(), false);
+        // FileUtils.writeByteArrayToFile(new File(textPath), text.getBytes(), false);
 
         // 分割路径，获取相对路径
         srcTextPath = srcTextPath.replace(rootPath, "");
-        textPath = textPath.replace(rootPath, "");
+        // textPath = textPath.replace(rootPath, "");
         // posts = this.findPostsById(postsId);
 
         //修改此贴
-        posts.setSrcText(srcTextPath);
-        posts.setText(textPath);
+        posts.setSrcText(srcTextPath+File.separator+PostsUtils.mdFileName);
+        posts.setText(srcTextPath+File.separator+PostsUtils.h5FileName);
         // this.modifyPosts(posts);
         postsMapper.addPosts(posts);
 
@@ -84,6 +88,8 @@ public class PostsServiceImpl implements PostsService {
 
         return postsId;
     }
+
+
 
     @Override
     public List<Posts> findAllPosts() {
@@ -118,18 +124,24 @@ public class PostsServiceImpl implements PostsService {
         String rootPath = session.getServletContext().getRealPath("");
         String srcTextPath = rootPath + postsById.getSrcText();
         String textPath = rootPath + postsById.getText();
+        String targetDirPath = buildContentDirectory(posts,rootPath);
 
         //保存文本并返回路径
         try {
-            FileUtils.writeByteArrayToFile(new File(srcTextPath), posts.getSrcText().getBytes(), false);
-            FileUtils.writeByteArrayToFile(new File(textPath), posts.getText().getBytes(), false);
+            MyFileUtils.deleteFile(srcTextPath);
+            MyFileUtils.deleteFile(textPath);
+            // FileUtils.writeByteArrayToFile(new File(srcTextPath), posts.getSrcText().getBytes(), false);
+            // FileUtils.writeByteArrayToFile(new File(textPath), posts.getText().getBytes(), false);
+            PostsUtils.postsSave2File(targetDirPath,posts);
         } catch (IOException e) {
+            logger.error("帖子更新失败，对应发帖编号 : "+posts.getId());
             e.printStackTrace();
+            throw new BbsException("帖子更新失败，对应发帖编号 : "+posts.getId(),e);
         }
 
-        posts.setSrcText(postsById.getSrcText());
-        posts.setText(postsById.getText());
-        // modifyPosts(posts);
+        posts.setSrcText(targetDirPath.replace(rootPath,"")+File.separator+PostsUtils.mdFileName);
+        posts.setText(targetDirPath.replace(rootPath,"")+File.separator+PostsUtils.h5FileName);
+        modifyPosts(posts);
     }
 
     @Override
@@ -260,5 +272,13 @@ public class PostsServiceImpl implements PostsService {
         postsPagination.setPagesAllNo((int) Math.ceil((float) postsPagination.getTotal() / (float) postsPagination.getPageSize()));
     }
 
-
+    /**
+     * 获取帖子内容存放的文件夹目录
+     * @param posts posts对象必须有主键值
+     * @param rootPath 根目录
+     * @return
+     */
+    private String buildContentDirectory(Posts posts, String rootPath) {
+        return rootPath +File.separator + "posts" +File.separator + posts.getId() + File.separator +"resources" +File.separator +"text";
+    }
 }

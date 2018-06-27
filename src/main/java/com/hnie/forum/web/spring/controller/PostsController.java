@@ -9,7 +9,7 @@ import com.hnie.forum.service.PostsCommentService;
 import com.hnie.forum.service.PostsService;
 import com.hnie.forum.service.SequenceService;
 import com.hnie.forum.utils.ControllerUtils;
-import com.hnie.forum.utils.FileUtils;
+import com.hnie.forum.utils.MyFileUtils;
 import com.hnie.forum.utils.PostsUtils;
 import com.hnie.forum.vo.PostsCommentPagination;
 import com.hnie.forum.vo.PostsPagination;
@@ -100,10 +100,12 @@ public class PostsController {
         //获取图片上传的原路径
         String srcPath = request.getSession().getServletContext().getRealPath("/posts/resources/");
         if (new File(srcPath).exists()) {
+            logger.info("获取图片原路径为："+ srcPath);
 //        创建图片上传的新路径
-            String destPath = request.getSession().getServletContext().getRealPath("/posts/") + "\\" + posts.getId() + "\\resources";
-            FileUtils.moveFile(srcPath, destPath);
-            logger.info(FileUtils.deleteDir(new File(srcPath)));//删除文件夹
+            String destPath = request.getSession().getServletContext().getRealPath("/posts/") + File.separator + posts.getId() + File.separator + "resources";
+            MyFileUtils.moveFile(srcPath, destPath);
+            boolean flag = MyFileUtils.deleteDir(new File(srcPath));
+            logger.info("文件删除结果："+flag);//删除文件夹
         }
 
         // TODO: 2017/5/14 这里跳转是重定向，一般跳转到置顶板块的帖子列表

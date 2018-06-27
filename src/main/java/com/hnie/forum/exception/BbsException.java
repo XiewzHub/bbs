@@ -29,6 +29,10 @@ public class BbsException extends RuntimeException {
         super(errMsg,cause);
         this.errMsg = errMsg;
     }
+    public BbsException(Throwable cause) {
+        super(cause);
+        this.errMsg = "系统内部错误";
+    }
 
     public String getErrCode() {
         return errCode;

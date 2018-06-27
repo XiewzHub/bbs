@@ -116,35 +116,7 @@ public class MobileTypeController {
         return result;
     }
 
-    /**
-     * 针对ajax传入的数据中文乱码转换
-     *
-     * @param mobileType
-     */
-    private void changeMobiTypeCode(MobileType mobileType) {
-        String charseName = String.valueOf(StringHttpMessageConverter.DEFAULT_CHARSET);
-        // charseName = "UTF-8";
-        String mobiBrand = mobileType.getMobiBrand();
-        String mobiSeries = mobileType.getMobiSeries();
-        String mobiType = mobileType.getMobiType();
-        logger.debug("未编码前的传入数据："+mobiBrand+"-----"+mobiSeries+"----"+mobiType+" 转换的编码格式为："+charseName);
-        try {
-            if (StringUtils.hasText(mobiBrand))
-                mobiBrand = new String(mobiBrand.getBytes(charseName));
-            if (StringUtils.hasText(mobiSeries))
-                mobiSeries = new String(mobiSeries.getBytes(charseName));
-            if (StringUtils.hasText(mobiType))
-                mobiType = new String(mobiSeries.getBytes(charseName));
-        } catch (UnsupportedEncodingException e) {
-            logger.error("解析出错！");
-            e.printStackTrace();
-        }
-        mobileType.setMobiBrand(mobiBrand);
-        mobileType.setMobiSeries(mobiSeries);
-        mobileType.setMobiSeries(mobiType);
-        logger.debug("编码后的传入数据："+mobiBrand+"-----"+mobiSeries+"----"+mobiType);
-        // return mobiBrand;
-    }
+
 
     /**
      * 第二级菜单选择
@@ -198,5 +170,33 @@ public class MobileTypeController {
 
         return result;
     }
-
+    /**
+     * 针对ajax传入的数据中文乱码转换
+     *
+     * @param mobileType
+     */
+    private void changeMobiTypeCode(MobileType mobileType) {
+        String charseName = String.valueOf(StringHttpMessageConverter.DEFAULT_CHARSET);
+        charseName = "UTF-8";
+        String mobiBrand = mobileType.getMobiBrand();
+        String mobiSeries = mobileType.getMobiSeries();
+        String mobiType = mobileType.getMobiType();
+        logger.debug("未编码前的传入数据："+mobiBrand+"-----"+mobiSeries+"----"+mobiType+" 转换的编码格式为："+charseName);
+        try {
+            if (StringUtils.hasText(mobiBrand))
+                mobiBrand = new String(mobiBrand.getBytes(charseName));
+            if (StringUtils.hasText(mobiSeries))
+                mobiSeries = new String(mobiSeries.getBytes(charseName));
+            if (StringUtils.hasText(mobiType))
+                mobiType = new String(mobiSeries.getBytes(charseName));
+        } catch (UnsupportedEncodingException e) {
+            logger.error("解析出错！");
+            e.printStackTrace();
+        }
+        mobileType.setMobiBrand(mobiBrand);
+        mobileType.setMobiSeries(mobiSeries);
+        mobileType.setMobiSeries(mobiType);
+        logger.debug("编码后的传入数据："+mobiBrand+"-----"+mobiSeries+"----"+mobiType);
+        // return mobiBrand;
+    }
 }

@@ -4,9 +4,11 @@ import com.hnie.forum.domain.Posts;
 import com.hnie.forum.exception.BbsException;
 import org.apache.commons.io.*;
 import org.apache.commons.io.FileUtils;
+import org.apache.log4j.Logger;
 
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpSession;
+import java.io.BufferedWriter;
 import java.io.File;
 import java.io.IOException;
 import java.util.ArrayList;
@@ -16,6 +18,10 @@ import java.util.List;
  * Created by Administrator on 2017/8/24.
  */
 public class PostsUtils {
+    private static Logger logger = Logger.getLogger(PostsUtils.class);
+    public static final String mdFileName = "srcText.md";
+    public static final String h5FileName = "text.txt";
+
 
     /**
      * 重载方法
@@ -60,22 +66,46 @@ public class PostsUtils {
      */
     public static Posts getPostsText(Posts posts, String rootPath) {
         // if (posts.getId() > 87) {
-            String textPath = posts.getText().replace("\\",File.separator);
-            String srcTextPath = posts.getSrcText().replace("\\",File.separator);
+            String textPath = rootPath + posts.getText().replace("\\",File.separator);
+            String srcTextPath = rootPath + posts.getSrcText().replace("\\",File.separator);
         // String separator = File.separator;
         try {
-                // byte[] byteArray = FileUtils.readFileToByteArray(new File(rootPath + "123.xnk"));
-                String text = new String(FileUtils.readFileToByteArray(new File(rootPath + textPath)));
-                String srcText = new String(FileUtils.readFileToByteArray(new File(rootPath + srcTextPath)));
+                // byte[] byteArray = MyFileUtils.readFileToByteArray(new File(rootPath + "123.xnk"));
+                String text = new String(FileUtils.readFileToByteArray(new File(textPath)));
+                String srcText = new String(FileUtils.readFileToByteArray(new File(srcTextPath)));
                 posts.setText(text);
                 posts.setSrcText(srcText);
 
             } catch (IOException e) {
                 e.printStackTrace();
-                throw new BbsException("请确认是"+textPath+"与"+srcTextPath+"否存在",e);
+                throw new BbsException("请确认文件"+textPath+"与"+srcTextPath+"否存在",e);
             }
         // }
 
         return posts;
+    }
+
+    /**
+     * 将帖子内容保存到指定文件夹下，分不同文件保存不同类型的内容
+     *  仅仅做保存，不改变对象内容
+     * @param targetDirPath 需要保存的文件夹目录
+     * @param posts
+     * @throws IOException
+     */
+    public static void postsSave2File(String targetDirPath,Posts posts) throws IOException {
+        String srcText = posts.getSrcText();
+        String text = posts.getText();
+        // 替换分割符号，不同系统的文件夹分割符号不同
+        targetDirPath.replace("\\",File.separator);
+
+        logger.info("转换后的路径分别为"+targetDirPath+"---"+"  --File.separator="+File.separator);
+        BufferedWriter mdFileWriter = MyFileUtils.newFile(targetDirPath, PostsUtils.mdFileName);
+        BufferedWriter txtFileWriter = MyFileUtils.newFile(targetDirPath, PostsUtils.h5FileName);
+        // 写文件
+        mdFileWriter.write(srcText);
+        txtFileWriter.write(text);
+        // 关闭文件
+        mdFileWriter.close();
+        txtFileWriter.close();
     }
 }
